@@ -1,0 +1,70 @@
+{% extends 'journal_app/base.html' %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">📝 Your Journal Entries</h2>
+    <a href="{% url 'journal_create' %}" class="btn btn-primary">+ New Entry</a>
+  </div>
+  <p class="text-muted">Today is: {{ current_date|date:"F j, Y" }}</p>
+  <!-- Tips Section -->
+  <div class="row mb-5">
+    <div class="col-md-4">
+      <div class="card border-success shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title text-success">💆‍♀️ Stress Relief Tip</h5>
+          <p class="card-text">Take 5-minute deep breathing breaks. Inhale for 4 seconds, hold, and exhale slowly.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-danger shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title text-danger">😡 Anger Management Tip</h5>
+          <p class="card-text">Pause before reacting. Count to 10, take a deep breath, then respond calmly.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-info shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title text-info">💡 Daily Mental Boost</h5>
+          <p class="card-text">Write down 3 things you're grateful for today. Positivity lifts the mind.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <form method="GET" class="mb-4">
+    <input type="text" name="search" class="form-control" placeholder="Search journal titles or content...">
+  </form>
+
+  <!-- Journal Entries -->
+  {% if journals %}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      {% for journal in journals %}
+        <div class="col">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ journal.title }}</h5>
+              <p class="card-text text-muted small">{{ journal.created_at|date:"F d, Y H:i" }}</p>
+              <p class="card-text">{{ journal.content|truncatewords:25 }}</p>
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <a href="{% url 'journal_detail' journal.pk %}" class="btn btn-outline-primary btn-sm">Read More</a>
+                <div>
+                  <a href="{% url 'journal_update' journal.pk %}" class="btn btn-outline-warning btn-sm me-1">Edit</a>
+                  <a href="{% url 'journal_delete' journal.pk %}" class="btn btn-outline-danger btn-sm">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info mt-4">No entries yet. Start by creating one!</div>
+  {% endif %}
+</div>
+{% endblock %}
